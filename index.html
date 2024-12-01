@@ -1,1 +1,76 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">Yunus Ege Küçük</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">Hakkımda</a></li>
+                    <li><a href="#projects">Projeler</a></li>
+                    <li><a href="#contact">İletişim</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2>Hakkımda</h2>
+            <img src="profile_picture.jpg" alt="photo" height="200">
+            <p>Merhaba! Ben Marmara Üniversitesi'nde Bilgisayar Mühendisliği öğrencisiyim. IT ve DevOps alanında deneyim kazanıyorum. Minimalist bir tasarımla projelerimi paylaşmak için bu siteyi oluşturdum. IT alanının yanı sıra gerçekleştirdiğim seyahatleri yazıya dökebileceğim bir seyahat blogu tasarlamak istedim. </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section bg-light">
+        <div class="container">
+            <h2>Projeler</h2>
+            <div class="grid">
+                <div class="project-card">
+                    <h3>Snakes Game</h3>
+                    <p>OpenCV kullanarak baş hareketleriyle oynanan bir yılan oyunu.</p>
+                    <a href="#">GitHub</a>
+                </div>
+                <div class="project-card">
+                    <h3>Azure CI/CD Pipeline</h3>
+                    <p>Microsoft Azure üzerinde Kubernetes cluster yönetimi ve CI/CD süreçleri.</p>
+                    <a href="#">Detaylar</a>
+                </div>
+                <div class="project-card">
+                    <h3>Kişisel Web Sitesi</h3>
+                    <p>Kendi portföyümü paylaşmak için bu minimalist web sitesini geliştirdim.</p>
+                    <a href="#">Canlı Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+     <section id="contact">
+        <h1>Contact</h1>
+        <p>You can contact me through the links below!</p>
+        <!-- Socials -->
+        <div class="socials">
+            <ul>
+                <li><a href="https://github.com/yegekucuk" target="_blank">GitHub</a></li>
+                <li><a href="https://linked.in/yegekucuk" target="_blank">LinkedIn</a></li>
+                <li><a href="https://instagram.com/yegekucuk" target="_blank">Instagram</a></li>
+            </ul>
+         </div>
+     </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 My Portfolio. Tüm hakları saklıdır.</p>
+    </footer>
+</body>
+</html>
