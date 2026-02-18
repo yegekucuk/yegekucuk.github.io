@@ -3,9 +3,16 @@ import { useState, useEffect } from 'react';
 interface TaskbarProps {
   onStartClick?: () => void;
   activeWindow?: string;
+  isMinimized?: boolean;
+  onTaskClick?: () => void;
 }
 
-export function Taskbar({ onStartClick, activeWindow }: TaskbarProps) {
+export function Taskbar({ 
+  onStartClick, 
+  activeWindow, 
+  isMinimized = false,
+  onTaskClick 
+}: TaskbarProps) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -47,15 +54,19 @@ export function Taskbar({ onStartClick, activeWindow }: TaskbarProps) {
       {/* Active Tasks */}
       <div className="flex-1 flex gap-1 px-0 overflow-hidden">
         {activeWindow && (
-          <div className="
-            flex items-center gap-2 px-2 h-[22px] w-[160px]
-            bg-[#c0c0c0] 
-            win95-border-inset
-          ">
+          <button 
+            onClick={onTaskClick}
+            className={`
+              flex items-center gap-2 px-2 h-[22px] w-[160px]
+              bg-[#c0c0c0] 
+              ${isMinimized ? 'win95-border-outset' : 'win95-border-inset'}
+              cursor-default
+            `}
+          >
             {/* Icon */}
             <span className="text-xs">💻</span>
             <span className="truncate text-xs font-bold">{activeWindow}</span>
-          </div>
+          </button>
         )}
       </div>
 

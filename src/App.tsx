@@ -26,14 +26,25 @@ function App() {
   } = portfolioConfig;
 
   const [activeWindow, setActiveWindow] = useState<string | null>("About");
+  const [isMinimized, setIsMinimized] = useState(false);
   const { position, handleMouseDown } = useDraggable({ x: 0, y: 0 });
 
   const handleIconClick = (windowName: string) => {
     setActiveWindow(windowName);
+    setIsMinimized(false);
   };
 
   const handleCloseWindow = () => {
     setActiveWindow(null);
+    setIsMinimized(false);
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(true);
+  };
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
   };
 
   const renderContent = () => {
@@ -125,7 +136,10 @@ function App() {
         <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
           {activeWindow && (
             <div 
-              className="w-full max-w-4xl h-[80vh] z-50"
+              className={`
+                w-full max-w-4xl h-[80vh] z-50
+                ${isMinimized ? 'hidden' : 'block'}
+              `}
               style={{
                 transform: `translate(${position.x}px, ${position.y}px)`,
               }}
@@ -133,7 +147,7 @@ function App() {
               <WindowFrame 
                 title={activeWindow} 
                 onClose={handleCloseWindow}
-                onMinimize={() => {}} 
+                onMinimize={handleMinimize} 
                 onMaximize={() => {}} 
                 onTitleMouseDown={handleMouseDown}
               >
@@ -149,6 +163,8 @@ function App() {
       {/* Taskbar */}
       <Taskbar 
         activeWindow={activeWindow || undefined} 
+        isMinimized={isMinimized}
+        onTaskClick={toggleMinimize}
         onStartClick={() => alert("Start Menu - Coming Soon!")}
       />
     </main>
