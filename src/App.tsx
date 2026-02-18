@@ -13,6 +13,7 @@ import { DesktopIcon } from "./components/retro/DesktopIcon";
 import { WindowFrame } from "./components/retro/WindowFrame";
 import { Taskbar } from "./components/retro/Taskbar";
 import { useDraggable } from "./hooks/useDraggable";
+import { useResizable } from "./hooks/useResizable";
 
 function App() {
   const {
@@ -202,16 +203,24 @@ function WindowController({
   onFocus, 
   children 
 }: WindowControllerProps) {
-  const { position, handleMouseDown } = useDraggable({ x: 0, y: 0 });
+  const { position, setPosition, handleMouseDown } = useDraggable({ x: 0, y: 0 });
+  const { size, handleResizeMouseDown } = useResizable({ 
+    initialSize: { width: 600, height: 400 },
+    minSize: { width: 200, height: 150 },
+    position,
+    setPosition
+  });
 
   return (
     <div 
       className={`
-        absolute top-10 left-10 w-full max-w-4xl h-[80vh] pointer-events-auto
+        absolute top-10 left-10 pointer-events-auto
         ${isMinimized ? 'hidden' : 'block'}
       `}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
+        width: `${size.width}px`,
+        height: `${size.height}px`,
         zIndex: isFocused ? 50 : 40,
       }}
       onMouseDown={onFocus}
@@ -223,8 +232,9 @@ function WindowController({
         onMinimize={onMinimize} 
         onMaximize={() => {}} 
         onTitleMouseDown={handleMouseDown}
+        onResizeMouseDown={handleResizeMouseDown}
       >
-        <div className="p-4">
+        <div className="h-full">
           {children}
         </div>
       </WindowFrame>

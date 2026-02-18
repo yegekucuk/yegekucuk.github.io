@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { ResizeDirection } from '../../hooks/useResizable';
 
 interface WindowFrameProps {
   title: string;
@@ -8,6 +9,7 @@ interface WindowFrameProps {
   onMinimize?: () => void;
   onMaximize?: () => void;
   onTitleMouseDown?: (e: React.MouseEvent) => void;
+  onResizeMouseDown?: (e: React.MouseEvent, direction: ResizeDirection) => void;
   style?: React.CSSProperties;
 }
 
@@ -19,6 +21,7 @@ export function WindowFrame({
   onMinimize,
   onMaximize,
   onTitleMouseDown,
+  onResizeMouseDown,
   style
 }: WindowFrameProps) {
   return (
@@ -83,10 +86,27 @@ export function WindowFrame({
           <span className="cursor-pointer hover:bg-[#000080] hover:text-white px-1">Help</span>
         </div>
 
-        {/* Content Area */}
+         {/* Content Area */}
         <div className="flex-1 overflow-auto p-4 bg-white m-0.5 win95-border-inset">
           {children}
         </div>
+
+        {/* Resize Handles - Positioned over the border area (negative margins) to avoid blocking content/scrollbars */}
+        {onResizeMouseDown && (
+          <>
+            {/* Corners */}
+            <div className="absolute -top-1 -left-1 w-3 h-3 cursor-nw-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'nw')} />
+            <div className="absolute -top-1 -right-1 w-3 h-3 cursor-ne-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'ne')} />
+            <div className="absolute -bottom-1 -left-1 w-3 h-3 cursor-sw-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'sw')} />
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 cursor-se-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'se')} />
+
+            {/* Edges */}
+            <div className="absolute -top-1 left-2 right-2 h-2 cursor-n-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'n')} />
+            <div className="absolute -bottom-1 left-2 right-2 h-2 cursor-s-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 's')} />
+            <div className="absolute -left-1 top-2 bottom-2 w-2 cursor-w-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'w')} />
+            <div className="absolute -right-1 top-2 bottom-2 w-2 cursor-e-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'e')} />
+          </>
+        )}
       </div>
     </div>
   );
