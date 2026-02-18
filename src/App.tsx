@@ -15,6 +15,8 @@ import { Taskbar } from "./components/retro/Taskbar";
 import { useDraggable } from "./hooks/useDraggable";
 import { useResizable } from "./hooks/useResizable";
 
+const WINDOW_CASCADE_OFFSET = 20;
+
 function App() {
   const {
     personalInfo,
@@ -165,6 +167,10 @@ function App() {
               onClose={() => handleCloseWindow(windowName)}
               onMinimize={() => handleMinimize(windowName)}
               onFocus={() => handleFocus(windowName)}
+              initialPosition={{
+                x: openWindows.indexOf(windowName) * WINDOW_CASCADE_OFFSET,
+                y: openWindows.indexOf(windowName) * WINDOW_CASCADE_OFFSET
+              }}
             >
               {renderContent(windowName)}
             </WindowController>
@@ -191,6 +197,7 @@ interface WindowControllerProps {
   onClose: () => void;
   onMinimize: () => void;
   onFocus: () => void;
+  initialPosition?: { x: number; y: number };
   children: React.ReactNode;
 }
 
@@ -201,9 +208,10 @@ function WindowController({
   onClose, 
   onMinimize, 
   onFocus, 
+  initialPosition = { x: 0, y: 0 },
   children 
 }: WindowControllerProps) {
-  const { position, setPosition, handleMouseDown } = useDraggable({ x: 0, y: 0 });
+  const { position, setPosition, handleMouseDown } = useDraggable(initialPosition);
   const { size, handleResizeMouseDown } = useResizable({ 
     initialSize: { width: 600, height: 400 },
     minSize: { width: 200, height: 150 },
