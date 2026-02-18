@@ -25,30 +25,49 @@ function App() {
     contact,
   } = portfolioConfig;
 
-  const [activeWindow, setActiveWindow] = useState<string | null>("About");
-  const [isMinimized, setIsMinimized] = useState(false);
-  const { position, handleMouseDown } = useDraggable({ x: 0, y: 0 });
+  const [openWindows, setOpenWindows] = useState<string[]>([]);
+  const [focusedWindow, setFocusedWindow] = useState<string | null>(null);
+  const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
 
   const handleIconClick = (windowName: string) => {
-    setActiveWindow(windowName);
-    setIsMinimized(false);
+    if (!openWindows.includes(windowName)) {
+      setOpenWindows([...openWindows, windowName]);
+    }
+    setFocusedWindow(windowName);
+    setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
   };
 
-  const handleCloseWindow = () => {
-    setActiveWindow(null);
-    setIsMinimized(false);
+  const handleCloseWindow = (windowName: string) => {
+    setOpenWindows(openWindows.filter(name => name !== windowName));
+    if (focusedWindow === windowName) {
+      setFocusedWindow(null);
+    }
   };
 
-  const handleMinimize = () => {
-    setIsMinimized(true);
+  const handleMinimize = (windowName: string) => {
+    setMinimizedWindows([...minimizedWindows, windowName]);
+    if (focusedWindow === windowName) {
+      setFocusedWindow(null);
+    }
   };
 
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+  const handleFocus = (windowName: string) => {
+    setFocusedWindow(windowName);
+    setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
   };
 
-  const renderContent = () => {
-    switch (activeWindow) {
+  const toggleMinimize = (windowName: string) => {
+    if (minimizedWindows.includes(windowName)) {
+      handleFocus(windowName);
+    } else if (focusedWindow === windowName) {
+      handleMinimize(windowName);
+    } else {
+      handleFocus(windowName);
+    }
+  };
+
+  const renderContent = (windowName: string | null) => {
+    switch (windowName) {
       case "About":
         return (
           <div className="flex flex-col gap-8">
@@ -94,6 +113,8 @@ function App() {
     }
   };
 
+
+
   return (
     <main className="h-screen w-screen bg-[#008080] overflow-hidden flex flex-col font-sans relative">
       {/* Desktop Area */}
@@ -103,71 +124,111 @@ function App() {
           <DesktopIcon 
             label="About Me" 
             iconSrc="/icons/Notes.png" 
-            isActive={activeWindow === "About"}
+            isActive={focusedWindow === "About"}
             onClick={() => handleIconClick("About")} 
           />
           <DesktopIcon 
             label="Education" 
             iconSrc="/icons/Books.png" 
-            isActive={activeWindow === "Education"}
+            isActive={focusedWindow === "Education"}
             onClick={() => handleIconClick("Education")} 
           />
           <DesktopIcon 
             label="Experience" 
             iconSrc="/icons/LinkedIn.png" 
-            isActive={activeWindow === "Experience"}
+            isActive={focusedWindow === "Experience"}
             onClick={() => handleIconClick("Experience")} 
           />
           <DesktopIcon 
             label="Projects" 
             iconSrc="/icons/DocumentsFolder.ico" 
-            isActive={activeWindow === "Projects"}
+            isActive={focusedWindow === "Projects"}
             onClick={() => handleIconClick("Projects")} 
           />
           <DesktopIcon 
             label="Contact Me" 
             iconSrc="/icons/Contacts.png" 
-            isActive={activeWindow === "Contact Me"}
+            isActive={focusedWindow === "Contact Me"}
             onClick={() => handleIconClick("Contact Me")} 
           />
         </div>
 
         {/* Window Area */}
-        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
-          {activeWindow && (
-            <div 
-              className={`
-                w-full max-w-4xl h-[80vh] z-50
-                ${isMinimized ? 'hidden' : 'block'}
-              `}
-              style={{
-                transform: `translate(${position.x}px, ${position.y}px)`,
-              }}
+        <div className="flex-1 relative overflow-hidden pointer-events-none">
+          {openWindows.map((windowName) => (
+            <WindowController
+              key={windowName}
+              title={windowName}
+              isFocused={focusedWindow === windowName}
+              isMinimized={minimizedWindows.includes(windowName)}
+              onClose={() => handleCloseWindow(windowName)}
+              onMinimize={() => handleMinimize(windowName)}
+              onFocus={() => handleFocus(windowName)}
             >
-              <WindowFrame 
-                title={activeWindow} 
-                onClose={handleCloseWindow}
-                onMinimize={handleMinimize} 
-                onMaximize={() => {}} 
-                onTitleMouseDown={handleMouseDown}
-              >
-                <div className="p-4">
-                  {renderContent()}
-                </div>
-              </WindowFrame>
-            </div>
-          )}
+              {renderContent(windowName)}
+            </WindowController>
+          ))}
         </div>
       </div>
 
       {/* Taskbar */}
       <Taskbar 
-        activeWindow={activeWindow || undefined} 
-        isMinimized={isMinimized}
+        openWindows={openWindows}
+        focusedWindow={focusedWindow}
+        minimizedWindows={minimizedWindows}
         onTaskClick={toggleMinimize}
         onStartClick={() => alert("Start Menu - Coming Soon!")}
       />
     </main>
+  );
+}
+
+interface WindowControllerProps {
+  title: string;
+  isFocused: boolean;
+  isMinimized: boolean;
+  onClose: () => void;
+  onMinimize: () => void;
+  onFocus: () => void;
+  children: React.ReactNode;
+}
+
+function WindowController({ 
+  title, 
+  isFocused, 
+  isMinimized, 
+  onClose, 
+  onMinimize, 
+  onFocus, 
+  children 
+}: WindowControllerProps) {
+  const { position, handleMouseDown } = useDraggable({ x: 0, y: 0 });
+
+  return (
+    <div 
+      className={`
+        absolute top-10 left-10 w-full max-w-4xl h-[80vh] pointer-events-auto
+        ${isMinimized ? 'hidden' : 'block'}
+      `}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        zIndex: isFocused ? 50 : 40,
+      }}
+      onMouseDown={onFocus}
+    >
+      <WindowFrame 
+        title={title} 
+        isActive={isFocused}
+        onClose={onClose}
+        onMinimize={onMinimize} 
+        onMaximize={() => {}} 
+        onTitleMouseDown={handleMouseDown}
+      >
+        <div className="p-4">
+          {children}
+        </div>
+      </WindowFrame>
+    </div>
   );
 }
 

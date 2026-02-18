@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react';
 
 interface TaskbarProps {
   onStartClick?: () => void;
-  activeWindow?: string;
-  isMinimized?: boolean;
-  onTaskClick?: () => void;
+  openWindows: string[];
+  focusedWindow: string | null;
+  minimizedWindows: string[];
+  onTaskClick: (windowName: string) => void;
 }
 
 export function Taskbar({ 
   onStartClick, 
-  activeWindow, 
-  isMinimized = false,
+  openWindows, 
+  focusedWindow,
+  minimizedWindows,
   onTaskClick 
 }: TaskbarProps) {
   const [time, setTime] = useState(new Date());
@@ -53,21 +55,27 @@ export function Taskbar({
 
       {/* Active Tasks */}
       <div className="flex-1 flex gap-1 px-0 overflow-hidden">
-        {activeWindow && (
-          <button 
-            onClick={onTaskClick}
-            className={`
-              flex items-center gap-2 px-2 h-[22px] w-[160px]
-              bg-[#c0c0c0] 
-              ${isMinimized ? 'win95-border-outset' : 'win95-border-inset'}
-              cursor-default
-            `}
-          >
-            {/* Icon */}
-            <span className="text-xs">💻</span>
-            <span className="truncate text-xs font-bold">{activeWindow}</span>
-          </button>
-        )}
+        {openWindows.map((windowName) => {
+          const isFocused = focusedWindow === windowName;
+          const isMinimized = minimizedWindows.includes(windowName);
+          
+          return (
+            <button 
+              key={windowName}
+              onClick={() => onTaskClick(windowName)}
+              className={`
+                flex items-center gap-2 px-2 h-[22px] w-[140px] md:w-[160px]
+                bg-[#c0c0c0] 
+                ${(!isMinimized && isFocused) ? 'win95-border-inset' : 'win95-border-outset'}
+                ${isFocused ? 'bg-[#dfdfdf]' : ''}
+                cursor-default
+              `}
+            >
+              <span className="text-xs">💻</span>
+              <span className="truncate text-xs font-bold">{windowName}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* System Tray */}
