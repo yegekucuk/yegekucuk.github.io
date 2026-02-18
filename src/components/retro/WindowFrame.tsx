@@ -7,6 +7,8 @@ interface WindowFrameProps {
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
+  onTitleMouseDown?: (e: React.MouseEvent) => void;
+  style?: React.CSSProperties;
 }
 
 export function WindowFrame({ 
@@ -15,10 +17,15 @@ export function WindowFrame({
   isActive = true,
   onClose,
   onMinimize,
-  onMaximize 
+  onMaximize,
+  onTitleMouseDown,
+  style
 }: WindowFrameProps) {
   return (
-    <div className="flex flex-col h-full w-full bg-[#c0c0c0] shadow-md relative p-1">
+    <div 
+      className="flex flex-col h-full w-full bg-[#c0c0c0] shadow-md relative p-1"
+      style={style}
+    >
       {/* Outer sizing/padding wrapper to create the double border effect */}
       <div className="absolute inset-px pointer-events-none border-t border-l border-[#ffffff] border-b border-r"></div>
       <div className="absolute inset-0 pointer-events-none border-t border-l border-[#dfdfdf] border-b border-r"></div>
@@ -27,10 +34,14 @@ export function WindowFrame({
       <div className="flex flex-col h-full w-full relative z-10">
       
         {/* Title Bar */}
-        <div className={`
-          flex items-center justify-between px-1 py-0.5 m-0.5
-          ${isActive ? 'bg-[#000080]' : 'bg-[#808080]'}
-        `}>
+        <div 
+          className={`
+            flex items-center justify-between px-1 py-0.5 m-0.5
+            ${isActive ? 'bg-[#000080]' : 'bg-[#808080]'}
+            cursor-default
+          `}
+          onMouseDown={onTitleMouseDown}
+        >
           <div className="flex items-center gap-1">
             {/* Icon placeholder */}
             <div className="w-4 h-4 text-xs flex items-center justify-center">💻</div>

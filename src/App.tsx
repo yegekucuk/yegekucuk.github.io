@@ -12,6 +12,7 @@ import { portfolioConfig } from "./data/config";
 import { DesktopIcon } from "./components/retro/DesktopIcon";
 import { WindowFrame } from "./components/retro/WindowFrame";
 import { Taskbar } from "./components/retro/Taskbar";
+import { useDraggable } from "./hooks/useDraggable";
 
 function App() {
   const {
@@ -25,6 +26,7 @@ function App() {
   } = portfolioConfig;
 
   const [activeWindow, setActiveWindow] = useState<string | null>("About");
+  const { position, handleMouseDown } = useDraggable({ x: 0, y: 0 });
 
   const handleIconClick = (windowName: string) => {
     setActiveWindow(windowName);
@@ -120,14 +122,20 @@ function App() {
         </div>
 
         {/* Window Area */}
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
           {activeWindow && (
-            <div className="w-full max-w-4xl h-[80vh] animate-in zoom-in-95 duration-200">
+            <div 
+              className="w-full max-w-4xl h-[80vh] z-50"
+              style={{
+                transform: `translate(${position.x}px, ${position.y}px)`,
+              }}
+            >
               <WindowFrame 
                 title={activeWindow} 
                 onClose={handleCloseWindow}
-                onMinimize={() => {}} // Placeholder for now
-                onMaximize={() => {}} // Placeholder for now
+                onMinimize={() => {}} 
+                onMaximize={() => {}} 
+                onTitleMouseDown={handleMouseDown}
               >
                 <div className="p-4">
                   {renderContent()}
