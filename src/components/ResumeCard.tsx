@@ -1,4 +1,5 @@
-import { ChevronRightIcon } from './Icons';
+import Image from 'next/image';
+import { ChevronRightIcon } from '@/components/Icons';
 
 interface ResumeCardProps {
   logoUrl: string;
@@ -26,10 +27,12 @@ export function ResumeCard({
       <div className="rounded-lg bg-card text-card-foreground flex">
         <div className="flex-none">
           <span className="relative flex shrink-0 overflow-hidden rounded-full border size-12 m-auto bg-white">
-            <img
+            <Image
               className="aspect-square h-full w-full object-contain"
               alt={altText}
               src={logoUrl}
+              width={48}
+              height={48}
             />
           </span>
         </div>

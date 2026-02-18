@@ -1,6 +1,6 @@
-import { SectionTitle } from '../ui/Section';
-import { ResumeCard } from '../ResumeCard';
-import type { WorkExperience } from '../../data/config';
+import { SectionTitle } from '@/components/ui/Section';
+import { ResumeCard } from '@/components/ResumeCard';
+import type { WorkExperience } from '@/data/config';
 
 interface WorkSectionProps {
   experiences: WorkExperience[];

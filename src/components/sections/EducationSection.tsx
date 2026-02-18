@@ -1,6 +1,6 @@
-import { SectionTitle } from '../ui/Section';
-import { ResumeCard } from '../ResumeCard';
-import type { Education } from '../../data/config';
+import { SectionTitle } from '@/components/ui/Section';
+import { ResumeCard } from '@/components/ResumeCard';
+import type { Education } from '@/data/config';
 
 interface EducationSectionProps {
   education: Education[];

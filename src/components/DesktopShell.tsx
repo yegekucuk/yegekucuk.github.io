@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   HeroSection,
@@ -7,13 +9,13 @@ import {
   SkillsSection,
   ProjectsSection,
   ContactSection,
-} from "./components/sections";
-import { portfolioConfig } from "./data/config";
-import { DesktopIcon } from "./components/retro/DesktopIcon";
-import { WindowFrame } from "./components/retro/WindowFrame";
-import { Taskbar } from "./components/retro/Taskbar";
-import { useDraggable } from "./hooks/useDraggable";
-import { useResizable } from "./hooks/useResizable";
+} from "@/components/sections";
+import { DesktopIcon } from "@/components/retro/DesktopIcon";
+import { WindowFrame } from "@/components/retro/WindowFrame";
+import { Taskbar } from "@/components/retro/Taskbar";
+import { useDraggable } from "@/hooks/useDraggable";
+import { useResizable } from "@/hooks/useResizable";
+import type { PortfolioConfig } from "@/data/config";
 
 const WINDOW_CASCADE_OFFSET = 20;
 
@@ -22,7 +24,11 @@ const isMobile = () => {
   return window.innerWidth < 768;
 };
 
-function App() {
+interface DesktopShellProps {
+  config: PortfolioConfig;
+}
+
+export function DesktopShell({ config }: DesktopShellProps) {
   const {
     personalInfo,
     skills,
@@ -31,11 +37,10 @@ function App() {
     projects,
     socials,
     contact,
-  } = portfolioConfig;
+  } = config;
 
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [focusedWindow, setFocusedWindow] = useState<string | null>(null);
-
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
@@ -49,7 +54,7 @@ function App() {
     }
     setFocusedWindow(windowName);
     setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
-    setSelectedIcon(windowName); // Also select the icon
+    setSelectedIcon(windowName);
   };
 
   const handleDesktopClick = () => {
@@ -57,33 +62,33 @@ function App() {
   };
 
   const handleCloseWindow = (windowName: string) => {
-      setOpenWindows(openWindows.filter(name => name !== windowName));
-      if (focusedWindow === windowName) {
-        setFocusedWindow(null);
-      }
-    };
-  
-    const handleMinimize = (windowName: string) => {
-      setMinimizedWindows([...minimizedWindows, windowName]);
-      if (focusedWindow === windowName) {
-        setFocusedWindow(null);
-      }
-    };
-  
-    const handleFocus = (windowName: string) => {
-      setFocusedWindow(windowName);
-      setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
-    };
-  
-    const toggleMinimize = (windowName: string) => {
-      if (minimizedWindows.includes(windowName)) {
-        handleFocus(windowName);
-      } else if (focusedWindow === windowName) {
-        handleMinimize(windowName);
-      } else {
-        handleFocus(windowName);
-      }
-    };
+    setOpenWindows(openWindows.filter(name => name !== windowName));
+    if (focusedWindow === windowName) {
+      setFocusedWindow(null);
+    }
+  };
+
+  const handleMinimize = (windowName: string) => {
+    setMinimizedWindows([...minimizedWindows, windowName]);
+    if (focusedWindow === windowName) {
+      setFocusedWindow(null);
+    }
+  };
+
+  const handleFocus = (windowName: string) => {
+    setFocusedWindow(windowName);
+    setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
+  };
+
+  const toggleMinimize = (windowName: string) => {
+    if (minimizedWindows.includes(windowName)) {
+      handleFocus(windowName);
+    } else if (focusedWindow === windowName) {
+      handleMinimize(windowName);
+    } else {
+      handleFocus(windowName);
+    }
+  };
 
   const renderContent = (windowName: string | null) => {
     switch (windowName) {
@@ -132,13 +137,11 @@ function App() {
     }
   };
 
-
-
   return (
     <main className="h-screen w-screen bg-[#008080] overflow-hidden flex flex-col font-sans relative">
       {/* Desktop Area */}
       <div className="flex-1 flex p-4 relative z-0" onClick={handleDesktopClick}>
-        {/* Desktop Icons Column - Adjusted z-index */}
+        {/* Desktop Icons Column */}
         <div className="flex flex-col gap-4 w-24 relative z-10" onClick={(e) => e.stopPropagation()}>
           <DesktopIcon 
             label="About Me" 
@@ -177,7 +180,7 @@ function App() {
           />
         </div>
 
-        {/* Window Area - Absolute overlay to allow floating over icons */}
+        {/* Window Area */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
           {openWindows.map((windowName) => (
             <WindowController
@@ -272,5 +275,3 @@ function WindowController({
     </div>
   );
 }
-
-export default App;

@@ -1,4 +1,4 @@
-import type { ContactInfo } from '../../data/config';
+import type { ContactInfo } from '@/data/config';
 
 interface ContactSectionProps {
   contact: ContactInfo;

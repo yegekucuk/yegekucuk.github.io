@@ -1,5 +1,5 @@
-import { SectionTitle } from '../ui/Section';
-import { Badge } from '../ui/Badge';
+import { SectionTitle } from '@/components/ui/Section';
+import { Badge } from '@/components/ui/Badge';
 
 interface SkillsSectionProps {
   skills: string[];

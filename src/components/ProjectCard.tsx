@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
-import { Badge } from './ui/Badge';
-import { GlobeIcon, GithubIcon, ExternalLinkIcon, StarIcon } from './Icons';
-import type { Project, ProjectLink } from '../data/config';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/Badge';
+import { GlobeIcon, GithubIcon, ExternalLinkIcon, StarIcon } from '@/components/Icons';
+import type { Project, ProjectLink } from '@/data/config';
 
 interface ProjectCardProps {
   project: Project;
@@ -48,9 +49,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 className="pointer-events-none mx-auto h-full w-full object-cover object-top"
               />
             ) : project.imageUrl ? (
-              <img
+              <Image
                 src={project.imageUrl}
                 alt={project.title}
+                width={600}
+                height={160}
                 className="h-40 w-full overflow-hidden object-cover object-top"
               />
             ) : null}

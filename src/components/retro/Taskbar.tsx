@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 
 interface TaskbarProps {
@@ -16,8 +18,11 @@ export function Taskbar({
   onTaskClick 
 }: TaskbarProps) {
   const [time, setTime] = useState(new Date());
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -39,7 +44,6 @@ export function Taskbar({
         style={{ height: '22px' }}
       >
         <div className="flex items-center justify-center">
-            {/* Simple Windows Flag representation */}
             <div className="grid grid-cols-2 gap-px w-3 h-3">
                 <div className="bg-[#e65f25] w-full h-full"></div>
                 <div className="bg-[#48b23c] w-full h-full"></div>
@@ -86,7 +90,7 @@ export function Taskbar({
         text-xs
       ">
         <span className="mr-2 text-xs">🔈</span>
-        <span>{formatTime(time)}</span>
+        <span>{mounted ? formatTime(time) : ''}</span>
       </div>
     </div>
   );

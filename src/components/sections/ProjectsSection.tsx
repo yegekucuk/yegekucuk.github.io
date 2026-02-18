@@ -1,5 +1,5 @@
-import { ProjectCard } from '../ProjectCard';
-import type { Project } from '../../data/config';
+import { ProjectCard } from '@/components/ProjectCard';
+import type { Project } from '@/data/config';
 
 interface ProjectsSectionProps {
   projects: Project[];

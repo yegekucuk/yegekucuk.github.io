@@ -1,8 +1,11 @@
+"use client";
+
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface DesktopIconProps {
   label: string;
-  iconSrc?: string; // Changed from icon node to source string
+  iconSrc?: string;
   onClick: () => void;
   onDoubleClick?: () => void;
   isActive?: boolean;
@@ -12,18 +15,15 @@ export function DesktopIcon({ label, iconSrc, onClick, onDoubleClick, isActive }
   const [lastTapTime, setLastTapTime] = useState(0);
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    // Stop propagation to prevent underlying desktop click
     e.stopPropagation();
     
     const currentTime = new Date().getTime();
     const tapLength = currentTime - lastTapTime;
     
     if (tapLength < 300 && tapLength > 0) {
-      // Double tap detected
       onDoubleClick?.();
-      e.preventDefault(); // Prevent zoom/default browser double-tap behavior
+      e.preventDefault();
     } else {
-      // Single tap
       onClick();
     }
     
@@ -48,7 +48,7 @@ export function DesktopIcon({ label, iconSrc, onClick, onDoubleClick, isActive }
     >
       <div className={`w-8 h-8 mb-1 flex items-center justify-center ${isActive ? 'brightness-75 icon-blue-overlay' : ''}`}>
         {iconSrc ? (
-            <img src={iconSrc} alt={label} className="w-full h-full object-contain pointer-events-none" />
+            <Image src={iconSrc} alt={label} width={32} height={32} className="w-full h-full object-contain pointer-events-none" />
         ) : (
             <div className="text-3xl">📁</div>
         )}
@@ -60,7 +60,6 @@ export function DesktopIcon({ label, iconSrc, onClick, onDoubleClick, isActive }
           : 'text-white'}
       `}
       style={{
-         // Win95 text shadow for desktop icons
          textShadow: isActive ? 'none' : '1px 1px 0px black'
       }}
       >

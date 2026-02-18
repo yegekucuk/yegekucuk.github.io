@@ -1,4 +1,4 @@
-import { SectionTitle } from '../ui/Section';
+import { SectionTitle } from '@/components/ui/Section';
 
 interface AboutSectionProps {
   description: string;

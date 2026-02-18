@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface AvatarProps {
   src: string;
   alt: string;
@@ -12,12 +14,20 @@ export function Avatar({ src, alt, size = 'md', className = '' }: AvatarProps) {
     lg: 'size-28',
   };
 
+  const pixelSizes = {
+    sm: 48,
+    md: 80,
+    lg: 112,
+  };
+
   return (
     <span className={`relative flex shrink-0 overflow-hidden rounded-full border ${sizes[size]} ${className}`}>
-      <img
+      <Image
         className="aspect-square h-full w-full object-cover"
         alt={alt}
         src={src}
+        width={pixelSizes[size]}
+        height={pixelSizes[size]}
       />
     </span>
   );
