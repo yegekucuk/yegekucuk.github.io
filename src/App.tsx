@@ -17,6 +17,11 @@ import { useResizable } from "./hooks/useResizable";
 
 const WINDOW_CASCADE_OFFSET = 20;
 
+const isMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 768;
+};
+
 function App() {
   const {
     personalInfo,
@@ -133,8 +138,8 @@ function App() {
     <main className="h-screen w-screen bg-[#008080] overflow-hidden flex flex-col font-sans relative">
       {/* Desktop Area */}
       <div className="flex-1 flex p-4 relative z-0" onClick={handleDesktopClick}>
-        {/* Desktop Icons Column */}
-        <div className="flex flex-col gap-4 w-24" onClick={(e) => e.stopPropagation()}>
+        {/* Desktop Icons Column - Adjusted z-index */}
+        <div className="flex flex-col gap-4 w-24 relative z-10" onClick={(e) => e.stopPropagation()}>
           <DesktopIcon 
             label="About Me" 
             iconSrc="/icons/Notes.png" 
@@ -172,8 +177,8 @@ function App() {
           />
         </div>
 
-        {/* Window Area */}
-        <div className="flex-1 relative overflow-hidden pointer-events-none">
+        {/* Window Area - Absolute overlay to allow floating over icons */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
           {openWindows.map((windowName) => (
             <WindowController
               key={windowName}
@@ -184,7 +189,7 @@ function App() {
               onMinimize={() => handleMinimize(windowName)}
               onFocus={() => handleFocus(windowName)}
               initialPosition={{
-                x: openWindows.indexOf(windowName) * WINDOW_CASCADE_OFFSET,
+                x: (isMobile() ? 0 : 100) + (openWindows.indexOf(windowName) * WINDOW_CASCADE_OFFSET),
                 y: openWindows.indexOf(windowName) * WINDOW_CASCADE_OFFSET
               }}
             >
