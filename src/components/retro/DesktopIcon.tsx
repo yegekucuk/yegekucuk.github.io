@@ -1,16 +1,48 @@
+import { useState } from 'react';
+
 interface DesktopIconProps {
   label: string;
   iconSrc?: string; // Changed from icon node to source string
   onClick: () => void;
+  onDoubleClick?: () => void;
   isActive?: boolean;
 }
 
-export function DesktopIcon({ label, iconSrc, onClick, isActive }: DesktopIconProps) {
+export function DesktopIcon({ label, iconSrc, onClick, onDoubleClick, isActive }: DesktopIconProps) {
+  const [lastTapTime, setLastTapTime] = useState(0);
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    // Stop propagation to prevent underlying desktop click
+    e.stopPropagation();
+    
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapTime;
+    
+    if (tapLength < 300 && tapLength > 0) {
+      // Double tap detected
+      onDoubleClick?.();
+      e.preventDefault(); // Prevent zoom/default browser double-tap behavior
+    } else {
+      // Single tap
+      onClick();
+    }
+    
+    setLastTapTime(currentTime);
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        onDoubleClick?.();
+      }}
+      onTouchEnd={handleTouchEnd}
       className={`
-        flex flex-col items-center justify-center w-20 p-px cursor-pointer gap-1
+        flex flex-col items-center justify-center w-20 p-px cursor-pointer gap-1 select-none
         ${isActive ? 'bg-transparent' : ''}
       `}
     >

@@ -30,44 +30,55 @@ function App() {
 
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [focusedWindow, setFocusedWindow] = useState<string | null>(null);
+
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
   const handleIconClick = (windowName: string) => {
+    setSelectedIcon(windowName);
+  };
+
+  const handleIconDoubleClick = (windowName: string) => {
     if (!openWindows.includes(windowName)) {
       setOpenWindows([...openWindows, windowName]);
     }
     setFocusedWindow(windowName);
     setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
+    setSelectedIcon(windowName); // Also select the icon
+  };
+
+  const handleDesktopClick = () => {
+    setSelectedIcon(null);
   };
 
   const handleCloseWindow = (windowName: string) => {
-    setOpenWindows(openWindows.filter(name => name !== windowName));
-    if (focusedWindow === windowName) {
-      setFocusedWindow(null);
-    }
-  };
-
-  const handleMinimize = (windowName: string) => {
-    setMinimizedWindows([...minimizedWindows, windowName]);
-    if (focusedWindow === windowName) {
-      setFocusedWindow(null);
-    }
-  };
-
-  const handleFocus = (windowName: string) => {
-    setFocusedWindow(windowName);
-    setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
-  };
-
-  const toggleMinimize = (windowName: string) => {
-    if (minimizedWindows.includes(windowName)) {
-      handleFocus(windowName);
-    } else if (focusedWindow === windowName) {
-      handleMinimize(windowName);
-    } else {
-      handleFocus(windowName);
-    }
-  };
+      setOpenWindows(openWindows.filter(name => name !== windowName));
+      if (focusedWindow === windowName) {
+        setFocusedWindow(null);
+      }
+    };
+  
+    const handleMinimize = (windowName: string) => {
+      setMinimizedWindows([...minimizedWindows, windowName]);
+      if (focusedWindow === windowName) {
+        setFocusedWindow(null);
+      }
+    };
+  
+    const handleFocus = (windowName: string) => {
+      setFocusedWindow(windowName);
+      setMinimizedWindows(minimizedWindows.filter(name => name !== windowName));
+    };
+  
+    const toggleMinimize = (windowName: string) => {
+      if (minimizedWindows.includes(windowName)) {
+        handleFocus(windowName);
+      } else if (focusedWindow === windowName) {
+        handleMinimize(windowName);
+      } else {
+        handleFocus(windowName);
+      }
+    };
 
   const renderContent = (windowName: string | null) => {
     switch (windowName) {
@@ -121,38 +132,43 @@ function App() {
   return (
     <main className="h-screen w-screen bg-[#008080] overflow-hidden flex flex-col font-sans relative">
       {/* Desktop Area */}
-      <div className="flex-1 flex p-4 relative z-0">
+      <div className="flex-1 flex p-4 relative z-0" onClick={handleDesktopClick}>
         {/* Desktop Icons Column */}
-        <div className="flex flex-col gap-4 w-24">
+        <div className="flex flex-col gap-4 w-24" onClick={(e) => e.stopPropagation()}>
           <DesktopIcon 
             label="About Me" 
             iconSrc="/icons/Notes.png" 
-            isActive={focusedWindow === "About"}
+            isActive={selectedIcon === "About"}
             onClick={() => handleIconClick("About")} 
+            onDoubleClick={() => handleIconDoubleClick("About")}
           />
           <DesktopIcon 
             label="Education" 
             iconSrc="/icons/Books.png" 
-            isActive={focusedWindow === "Education"}
+            isActive={selectedIcon === "Education"}
             onClick={() => handleIconClick("Education")} 
+            onDoubleClick={() => handleIconDoubleClick("Education")}
           />
           <DesktopIcon 
             label="Experience" 
             iconSrc="/icons/LinkedIn.png" 
-            isActive={focusedWindow === "Experience"}
+            isActive={selectedIcon === "Experience"}
             onClick={() => handleIconClick("Experience")} 
+            onDoubleClick={() => handleIconDoubleClick("Experience")}
           />
           <DesktopIcon 
             label="Projects" 
             iconSrc="/icons/DocumentsFolder.ico" 
-            isActive={focusedWindow === "Projects"}
+            isActive={selectedIcon === "Projects"}
             onClick={() => handleIconClick("Projects")} 
+            onDoubleClick={() => handleIconDoubleClick("Projects")}
           />
           <DesktopIcon 
             label="Contact Me" 
             iconSrc="/icons/Contacts.png" 
-            isActive={focusedWindow === "Contact Me"}
+            isActive={selectedIcon === "Contact Me"}
             onClick={() => handleIconClick("Contact Me")} 
+            onDoubleClick={() => handleIconDoubleClick("Contact Me")}
           />
         </div>
 
@@ -211,8 +227,8 @@ function WindowController({
   initialPosition = { x: 0, y: 0 },
   children 
 }: WindowControllerProps) {
-  const { position, setPosition, handleMouseDown } = useDraggable(initialPosition);
-  const { size, handleResizeMouseDown } = useResizable({ 
+  const { position, setPosition, handleMouseDown, handleTouchStart } = useDraggable(initialPosition);
+  const { size, handleResizeMouseDown, handleResizeTouchStart } = useResizable({ 
     initialSize: { width: 600, height: 400 },
     minSize: { width: 200, height: 150 },
     position,
@@ -240,7 +256,9 @@ function WindowController({
         onMinimize={onMinimize} 
         onMaximize={() => {}} 
         onTitleMouseDown={handleMouseDown}
+        onTitleTouchStart={handleTouchStart}
         onResizeMouseDown={handleResizeMouseDown}
+        onResizeTouchStart={handleResizeTouchStart}
       >
         <div className="h-full">
           {children}

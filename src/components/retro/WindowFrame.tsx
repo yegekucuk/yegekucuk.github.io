@@ -9,7 +9,9 @@ interface WindowFrameProps {
   onMinimize?: () => void;
   onMaximize?: () => void;
   onTitleMouseDown?: (e: React.MouseEvent) => void;
+  onTitleTouchStart?: (e: React.TouchEvent) => void;
   onResizeMouseDown?: (e: React.MouseEvent, direction: ResizeDirection) => void;
+  onResizeTouchStart?: (e: React.TouchEvent, direction: ResizeDirection) => void;
   style?: React.CSSProperties;
 }
 
@@ -21,7 +23,9 @@ export function WindowFrame({
   onMinimize,
   onMaximize,
   onTitleMouseDown,
+  onTitleTouchStart,
   onResizeMouseDown,
+  onResizeTouchStart,
   style
 }: WindowFrameProps) {
   return (
@@ -44,6 +48,7 @@ export function WindowFrame({
             cursor-default
           `}
           onMouseDown={onTitleMouseDown}
+          onTouchStart={onTitleTouchStart}
         >
           <div className="flex items-center gap-1">
             {/* Icon placeholder */}
@@ -92,19 +97,43 @@ export function WindowFrame({
         </div>
 
         {/* Resize Handles - Positioned over the border area (negative margins) to avoid blocking content/scrollbars */}
-        {onResizeMouseDown && (
+        {onResizeMouseDown && onResizeTouchStart && (
           <>
             {/* Corners */}
-            <div className="absolute -top-1 -left-1 w-3 h-3 cursor-nw-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'nw')} />
-            <div className="absolute -top-1 -right-1 w-3 h-3 cursor-ne-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'ne')} />
-            <div className="absolute -bottom-1 -left-1 w-3 h-3 cursor-sw-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'sw')} />
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 cursor-se-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'se')} />
+            <div className="absolute -top-1 -left-1 w-3 h-3 cursor-nw-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'nw')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'nw')}
+            />
+            <div className="absolute -top-1 -right-1 w-3 h-3 cursor-ne-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'ne')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'ne')}
+            />
+            <div className="absolute -bottom-1 -left-1 w-3 h-3 cursor-sw-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'sw')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'sw')}
+            />
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 cursor-se-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'se')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'se')}
+            />
 
             {/* Edges */}
-            <div className="absolute -top-1 left-2 right-2 h-2 cursor-n-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'n')} />
-            <div className="absolute -bottom-1 left-2 right-2 h-2 cursor-s-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 's')} />
-            <div className="absolute -left-1 top-2 bottom-2 w-2 cursor-w-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'w')} />
-            <div className="absolute -right-1 top-2 bottom-2 w-2 cursor-e-resize z-20" onMouseDown={(e) => onResizeMouseDown(e, 'e')} />
+            <div className="absolute -top-1 left-2 right-2 h-2 cursor-n-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'n')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'n')}
+            />
+            <div className="absolute -bottom-1 left-2 right-2 h-2 cursor-s-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 's')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 's')}
+            />
+            <div className="absolute -left-1 top-2 bottom-2 w-2 cursor-w-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'w')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'w')}
+            />
+            <div className="absolute -right-1 top-2 bottom-2 w-2 cursor-e-resize z-20" 
+              onMouseDown={(e) => onResizeMouseDown(e, 'e')} 
+              onTouchStart={(e) => onResizeTouchStart(e, 'e')}
+            />
           </>
         )}
       </div>
