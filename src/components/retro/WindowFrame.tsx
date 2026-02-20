@@ -7,6 +7,7 @@ interface WindowFrameProps {
   title: string;
   children: ReactNode;
   isActive?: boolean;
+  isMaximized?: boolean;
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
@@ -22,6 +23,7 @@ export function WindowFrame({
   title, 
   children, 
   isActive = true,
+  isMaximized = false,
   onClose,
   onMinimize,
   onMaximize,
@@ -51,6 +53,7 @@ export function WindowFrame({
           `}
           onMouseDown={onTitleMouseDown}
           onTouchStart={onTitleTouchStart}
+          onDoubleClick={onMaximize}
         >
           <div className="flex items-center gap-1">
             <div className="w-4 h-4 text-xs flex items-center justify-center">💻</div>
@@ -70,7 +73,20 @@ export function WindowFrame({
               onClick={onMaximize}
               className="w-4 h-4 bg-[#c0c0c0] flex items-center justify-center win95-btn active:ml-px active:mt-px"
             >
-              <div className="w-2 h-2 border border-black border-t-2"></div>
+              {isMaximized ? (
+                <div className="relative w-[11px] h-[11px]">
+                  <div className="absolute top-0 right-0 w-[8px] h-[8px] bg-black p-[2px]">
+                    <div className="w-full h-full bg-[#c0c0c0]"></div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-[8px] h-[8px] bg-black p-[2px]">
+                    <div className="w-full h-full bg-[#c0c0c0]"></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-[10px] h-[10px] bg-black p-[2px]">
+                  <div className="w-full h-full bg-[#c0c0c0]"></div>
+                </div>
+              )}
             </button>
             <button 
               onClick={onClose}

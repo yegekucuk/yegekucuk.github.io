@@ -260,16 +260,20 @@ function WindowController({
     setPosition
   });
 
+  const [isMaximized, setIsMaximized] = useState(false);
+
   return (
     <div 
       className={`
-        absolute top-10 left-10 pointer-events-auto
+        absolute pointer-events-auto
         ${isMinimized ? 'hidden' : 'block'}
       `}
       style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        width: `${size.width}px`,
-        height: `${size.height}px`,
+        transform: isMaximized ? 'none' : `translate(${position.x}px, ${position.y}px)`,
+        width: isMaximized ? '100%' : `${size.width}px`,
+        height: isMaximized ? '100%' : `${size.height}px`,
+        top: isMaximized ? 0 : '2.5rem',
+        left: isMaximized ? 0 : '2.5rem',
         zIndex: isFocused ? 50 : 40,
       }}
       onMouseDown={onFocus}
@@ -277,13 +281,17 @@ function WindowController({
       <WindowFrame 
         title={title} 
         isActive={isFocused}
+        isMaximized={isMaximized}
         onClose={onClose}
         onMinimize={onMinimize} 
-        onMaximize={() => {}} 
-        onTitleMouseDown={handleMouseDown}
-        onTitleTouchStart={handleTouchStart}
-        onResizeMouseDown={handleResizeMouseDown}
-        onResizeTouchStart={handleResizeTouchStart}
+        onMaximize={() => {
+          setIsMaximized(!isMaximized);
+          onFocus();
+        }} 
+        onTitleMouseDown={isMaximized ? undefined : handleMouseDown}
+        onTitleTouchStart={isMaximized ? undefined : handleTouchStart}
+        onResizeMouseDown={isMaximized ? undefined : handleResizeMouseDown}
+        onResizeTouchStart={isMaximized ? undefined : handleResizeTouchStart}
         hasPadding={title !== "Internet Explorer"}
       >
         <div className="h-full">
