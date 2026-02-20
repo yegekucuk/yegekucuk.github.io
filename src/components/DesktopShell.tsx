@@ -12,6 +12,7 @@ import {
 } from "@/components/sections";
 import { DesktopIcon } from "@/components/retro/DesktopIcon";
 import { WindowFrame } from "@/components/retro/WindowFrame";
+import { InternetExplorer } from "@/components/retro/InternetExplorer";
 import { Taskbar } from "@/components/retro/Taskbar";
 import { useDraggable } from "@/hooks/useDraggable";
 import { useResizable } from "@/hooks/useResizable";
@@ -132,6 +133,8 @@ export function DesktopShell({ config }: DesktopShellProps) {
             </div>
           </div>
         );
+      case "Internet Explorer":
+        return <InternetExplorer />;
       default:
         return null;
     }
@@ -177,6 +180,13 @@ export function DesktopShell({ config }: DesktopShellProps) {
             isActive={selectedIcon === "Contact Me"}
             onClick={() => handleIconClick("Contact Me")} 
             onDoubleClick={() => handleIconDoubleClick("Contact Me")}
+          />
+          <DesktopIcon 
+            label="Internet Explorer" 
+            iconSrc="/icons/Safari.png" 
+            isActive={selectedIcon === "Internet Explorer"}
+            onClick={() => handleIconClick("Internet Explorer")} 
+            onDoubleClick={() => handleIconDoubleClick("Internet Explorer")}
           />
         </div>
 
@@ -274,6 +284,7 @@ function WindowController({
         onTitleTouchStart={handleTouchStart}
         onResizeMouseDown={handleResizeMouseDown}
         onResizeTouchStart={handleResizeTouchStart}
+        hasPadding={title !== "Internet Explorer"}
       >
         <div className="h-full">
           {children}

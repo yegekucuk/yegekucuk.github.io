@@ -15,6 +15,7 @@ interface WindowFrameProps {
   onResizeMouseDown?: (e: React.MouseEvent, direction: ResizeDirection) => void;
   onResizeTouchStart?: (e: React.TouchEvent, direction: ResizeDirection) => void;
   style?: React.CSSProperties;
+  hasPadding?: boolean;
 }
 
 export function WindowFrame({ 
@@ -28,7 +29,8 @@ export function WindowFrame({
   onTitleTouchStart,
   onResizeMouseDown,
   onResizeTouchStart,
-  style
+  style,
+  hasPadding = true
 }: WindowFrameProps) {
   return (
     <div 
@@ -88,7 +90,7 @@ export function WindowFrame({
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto p-4 bg-white m-0.5 win95-border-inset">
+        <div className={`flex-1 overflow-auto m-0.5 win95-border-inset ${hasPadding ? 'p-4 bg-white' : ''}`}>
           {children}
         </div>
 
