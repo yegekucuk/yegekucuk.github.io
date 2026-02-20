@@ -235,9 +235,16 @@ function WindowController({
   initialPosition = { x: 0, y: 0 },
   children 
 }: WindowControllerProps) {
+  const [defaultSize] = useState(() => {
+    if (typeof window === 'undefined') return { width: 600, height: 400 };
+    return window.innerWidth > 1440 
+      ? { width: 900, height: 600 } 
+      : { width: 600, height: 400 };
+  });
+
   const { position, setPosition, handleMouseDown, handleTouchStart } = useDraggable(initialPosition);
   const { size, handleResizeMouseDown, handleResizeTouchStart } = useResizable({ 
-    initialSize: { width: 600, height: 400 },
+    initialSize: defaultSize,
     minSize: { width: 200, height: 150 },
     position,
     setPosition
