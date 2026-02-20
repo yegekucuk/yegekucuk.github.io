@@ -54,7 +54,7 @@ export function DesktopIcon({ label, iconSrc, onClick, onDoubleClick, isActive }
         )}
       </div>
       <span className={`
-        text-xs font-normal px-1 text-center select-none truncate w-full
+        text-xs font-normal px-1 text-center select-none wrap-break-word whitespace-normal leading-tight
         ${isActive 
           ? 'bg-[#000080] text-white' 
           : 'text-white'}
