@@ -166,7 +166,7 @@ export function DesktopShell({ config }: DesktopShellProps) {
           />
           <DesktopIcon 
             label="Projects" 
-            iconSrc="/icons/DocumentsFolder.ico" 
+            iconSrc="/icons/Files.png" 
             isActive={selectedIcon === "Projects"}
             onClick={() => handleIconClick("Projects")} 
             onDoubleClick={() => handleIconDoubleClick("Projects")}
